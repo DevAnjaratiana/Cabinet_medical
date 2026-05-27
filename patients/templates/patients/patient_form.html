@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-person-plus me-2"></i>
+                    {% if form.instance.pk %}Modifier le patient{% else %}Nouveau patient{% endif %}
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                
+                <!-- Affichage des erreurs stylisé -->
+                {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Erreur de validation</strong>
+                    <ul class="mb-0 mt-2">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nom</label>
+                            {{ form.nom }}
+                            <div class="form-text text-muted small">Obligatoire</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Prénom</label>
+                            {{ form.prenom }}
+                            <div class="form-text text-muted small">Obligatoire</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Date de naissance</label>
+                            {{ form.date_naissance }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Téléphone</label>
+                            {{ form.telephone }}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Email</label>
+                            {{ form.email }}
+                            <div class="form-text text-muted small">Optionnel</div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Adresse</label>
+                            {{ form.adresse }}
+                            <div class="form-text text-muted small">Optionnel</div>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'patients:patient_list' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                            <i class="bi bi-x-circle me-1"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="bi bi-check-circle me-1"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Amélioration des champs du formulaire */
+    input, select, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        font-size: 0.95rem;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #86b7fe;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+    }
+    
+    /* Style pour les champs en erreur */
+    input:invalid, select:invalid {
+        border-color: #dc3545;
+    }
+    
+    .form-label {
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    
+    .form-text {
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+</style>
+{% endblock %}

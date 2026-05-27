@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4>⚠️ Confirmation de suppression</h4>
+    </div>
+    <div class="card-body">
+        <p>Supprimer la consultation du <strong>{{ consultation.date_consultation|date:"d/m/Y" }}</strong> pour :</p>
+        <p><strong>{{ consultation.rendez_vous.patient.nom }} {{ consultation.rendez_vous.patient.prenom }}</strong></p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+            <a href="{% url 'consultations:liste' %}" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

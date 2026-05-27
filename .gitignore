@@ -1,0 +1,32 @@
+# Environnement virtuel
+env/
+venv/
+ENV/
+
+# Base de données
+db.sqlite3
+*.sql
+*.backup
+
+# Fichiers Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+
+# Fichiers statiques collectés
+staticfiles/
+media/
+
+# IDE
+.vscode/
+.idea/
+
+# Variables d'environnement
+.env
+
+# Fichiers temporaires
+*.tmp
+*.swp

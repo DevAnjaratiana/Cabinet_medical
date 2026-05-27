@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-info text-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-file-text-fill me-2"></i> Détail de la consultation
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                
+                <!-- Infos du rendez-vous -->
+                <div class="alert alert-light border mb-4">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-calendar-event me-2 text-primary"></i>Informations du rendez-vous
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="text-muted small mb-1">Patient</label>
+                            <p class="fw-semibold mb-0">{{ consultation.rendez_vous.patient.nom }} {{ consultation.rendez_vous.patient.prenom }}</p>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="text-muted small mb-1">Médecin</label>
+                            <p class="fw-semibold mb-0">Dr {{ consultation.rendez_vous.medecin.nom }} {{ consultation.rendez_vous.medecin.prenom }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small mb-1">Date du rendez-vous</label>
+                            <p class="fw-semibold mb-0">{{ consultation.rendez_vous.date_rendez_vous|date:"d/m/Y" }} à {{ consultation.rendez_vous.heure_rendez_vous }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small mb-1">Date de consultation</label>
+                            <p class="fw-semibold mb-0">{{ consultation.date_consultation|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Données médicales -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label class="text-muted small mb-1">Diagnostic</label>
+                        <div class="p-3 bg-light rounded-3">
+                            {{ consultation.diagnostic|default:"-"|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label class="text-muted small mb-1">Traitement prescrit</label>
+                        <div class="p-3 bg-light rounded-3">
+                            {{ consultation.traitement|default:"-"|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label class="text-muted small mb-1">Notes complémentaires</label>
+                        <div class="p-3 bg-light rounded-3">
+                            {{ consultation.notes|default:"-"|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="text-muted small mb-1">Poids</label>
+                        <div class="p-3 bg-light rounded-3 text-center fw-bold">
+                            {{ consultation.poids|default:"-" }} kg
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="text-muted small mb-1">Tension artérielle</label>
+                        <div class="p-3 bg-light rounded-3 text-center fw-bold">
+                            {{ consultation.tension_arterielle|default:"-" }}
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{% url 'consultations:liste' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="bi bi-arrow-left me-1"></i> Retour
+                    </a>
+                    <a href="{% url 'consultations:update' consultation.pk %}" class="btn btn-warning rounded-pill px-4">
+                        <i class="bi bi-pencil me-1"></i> Modifier
+                    </a>
+                    <a href="{% url 'consultations:delete' consultation.pk %}" class="btn btn-danger rounded-pill px-4">
+                        <i class="bi bi-trash me-1"></i> Supprimer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

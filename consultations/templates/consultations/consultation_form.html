@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-info text-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-file-text-fill me-2"></i>
+                    {% if consultation %}Modifier la consultation{% else %}Nouvelle consultation{% endif %}
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                
+                <!-- Affichage des erreurs stylisé -->
+                {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Erreur de validation</strong>
+                    <ul class="mb-0 mt-2">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <!-- Sélection du rendez-vous (COMBO) -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-calendar-event me-1"></i> Rendez-vous associé
+                            </label>
+                            {{ form.rendez_vous }}
+                            <div class="form-text text-muted small">Sélectionnez le rendez-vous correspondant</div>
+                        </div>
+                        
+                        <!-- Diagnostic -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Diagnostic</label>
+                            {{ form.diagnostic }}
+                            <div class="form-text text-muted small">Résumé de la consultation</div>
+                        </div>
+                        
+                        <!-- Traitement -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Traitement prescrit</label>
+                            {{ form.traitement }}
+                            <div class="form-text text-muted small">Médicaments, recommandations, etc.</div>
+                        </div>
+                        
+                        <!-- Notes -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Notes complémentaires</label>
+                            {{ form.notes }}
+                            <div class="form-text text-muted small">Informations supplémentaires</div>
+                        </div>
+                        
+                        <!-- Poids et Tension sur 2 colonnes -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Poids (kg)</label>
+                            {{ form.poids }}
+                            <div class="form-text text-muted small">Optionnel</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Tension artérielle</label>
+                            {{ form.tension_arterielle }}
+                            <div class="form-text text-muted small">Ex: 12/8</div>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'consultations:liste' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                            <i class="bi bi-x-circle me-1"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-info rounded-pill px-4 text-white">
+                            <i class="bi bi-check-circle me-1"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Amélioration des champs */
+    input, select, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        font-size: 0.95rem;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #86b7fe;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+    }
+    
+    /* Style spécifique pour le select */
+    select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 14px;
+    }
+    
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .form-label {
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    
+    .form-text {
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+</style>
+{% endblock %}

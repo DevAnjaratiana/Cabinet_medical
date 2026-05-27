@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Welcome section -->
+<div class="d-flex justify-content-between align-items-center flex-wrap flex-md-nowrap mb-4">
+    <div>
+        <h1 class="h2 fw-bold">
+            <i class="bi bi-speedometer2 text-primary me-2"></i>Tableau de bord
+        </h1>
+        <p class="text-muted">Bienvenue, {{ user.get_full_name|default:user.username }}</p>
+    </div>
+    <div class="btn-toolbar">
+        <span class="badge bg-light text-dark p-2 shadow-sm">
+            <i class="bi bi-calendar me-1"></i> {% now "l d/m/Y" %}
+        </span>
+    </div>
+</div>
+
+<!-- Statistics cards modernes -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                        <i class="bi bi-people-fill fs-4 text-primary"></i>
+                    </div>
+                    <span class="badge bg-primary bg-opacity-10 text-primary">+12%</span>
+                </div>
+                <h3 class="fw-bold mb-1">{{ total_patients }}</h3>
+                <p class="text-muted mb-0">Patients inscrits</p>
+                <small class="text-success">
+                    <i class="bi bi-arrow-up-short"></i> +3 cette semaine
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                        <i class="bi bi-person-badge-fill fs-4 text-success"></i>
+                    </div>
+                    <span class="badge bg-success bg-opacity-10 text-success">+5%</span>
+                </div>
+                <h3 class="fw-bold mb-1">{{ total_medecins }}</h3>
+                <p class="text-muted mb-0">Médecins actifs</p>
+                <small class="text-success">
+                    <i class="bi bi-arrow-up-short"></i> 4 spécialités
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                        <i class="bi bi-calendar-check-fill fs-4 text-info"></i>
+                    </div>
+                    <span class="badge bg-info bg-opacity-10 text-info">Aujourd'hui</span>
+                </div>
+                <h3 class="fw-bold mb-1">{{ rdv_today|default:"0" }}</h3>
+                <p class="text-muted mb-0">Rendez-vous aujourd'hui</p>
+                <small class="text-warning">
+                    <i class="bi bi-clock"></i> Prochain dans 30 min
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                        <i class="bi bi-file-text-fill fs-4 text-warning"></i>
+                    </div>
+                    <span class="badge bg-warning bg-opacity-10 text-warning">+8%</span>
+                </div>
+                <h3 class="fw-bold mb-1">{{ total_consultations|default:"0" }}</h3>
+                <p class="text-muted mb-0">Consultations</p>
+                <small class="text-success">
+                    <i class="bi bi-arrow-up-short"></i> +5 ce mois
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graphique simple (style) -->
+<div class="row g-4 mb-5">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-graph-up me-2 text-primary"></i>Activité récente
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Patient</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rdv in rdvs_recents|slice:":5" %}
+                            <tr>
+                                <td>{{ rdv.patient.nom }} {{ rdv.patient.prenom }}</td>
+                                <td><span class="badge bg-info bg-opacity-10 text-info">Rendez-vous</span></td>
+                                <td>{{ rdv.date_rendez_vous|date:"d/m/Y" }} à {{ rdv.heure_rendez_vous }}</td>
+                                <td>
+                                    {% if rdv.statut == 'planifie' %}
+                                        <span class="badge bg-secondary">Planifié</span>
+                                    {% elif rdv.statut == 'confirme' %}
+                                        <span class="badge bg-success">Confirmé</span>
+                                    {% elif rdv.statut == 'termine' %}
+                                        <span class="badge bg-info">Terminé</span>
+                                    {% elif rdv.statut == 'annule' %}
+                                        <span class="badge bg-danger">Annulé</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox fs-1 d-block"></i>
+                                    Aucune activité récente
+                                 </td>
+                             </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-pie-chart me-2 text-primary"></i>Répartition
+                </h5>
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="mb-4">
+                    <div class="progress" style="height: 30px; border-radius: 50px;">
+                        <div class="progress-bar bg-primary" style="width: {{ rdv_percentage|default:'0' }}%">
+                            Rendez-vous
+                        </div>
+                        <div class="progress-bar bg-success" style="width: {{ consultation_percentage|default:'0' }}%">
+                            Consultations
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center gap-4">
+                    <div>
+                        <i class="bi bi-calendar-week text-primary"></i>
+                        <span class="fw-bold">{{ total_rdvs|default:"0" }}</span>
+                        <small class="text-muted d-block">RDV totaux</small>
+                    </div>
+                    <div>
+                        <i class="bi bi-file-text text-success"></i>
+                        <span class="fw-bold">{{ total_consultations|default:"0" }}</span>
+                        <small class="text-muted d-block">Consultations</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions rapides -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 pt-4">
+        <h5 class="fw-bold mb-0">
+            <i class="bi bi-lightning-charge me-2 text-primary"></i>Actions rapides
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <a href="{% url 'patients:patient_create' %}" class="text-decoration-none">
+                    <div class="text-center p-3 border rounded-3 hover-shadow">
+                        <i class="bi bi-person-plus fs-1 text-primary"></i>
+                        <p class="mb-0 mt-2 fw-semibold">Nouveau patient</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'rendezvous:ajouter' %}" class="text-decoration-none">
+                    <div class="text-center p-3 border rounded-3 hover-shadow">
+                        <i class="bi bi-calendar-plus fs-1 text-success"></i>
+                        <p class="mb-0 mt-2 fw-semibold">Prendre RDV</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'medecins:medecin_create' %}" class="text-decoration-none">
+                    <div class="text-center p-3 border rounded-3 hover-shadow">
+                        <i class="bi bi-person-badge-plus fs-1 text-info"></i>
+                        <p class="mb-0 mt-2 fw-semibold">Ajouter médecin</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'consultations:liste' %}" class="text-decoration-none">
+                    <div class="text-center p-3 border rounded-3 hover-shadow">
+                        <i class="bi bi-file-text fs-1 text-warning"></i>
+                        <p class="mb-0 mt-2 fw-semibold">Voir consultations</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-shadow {
+        transition: all 0.3s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        background-color: #f8f9fa;
+    }
+    .progress {
+        background-color: #e9ecef;
+        overflow: hidden;
+    }
+    .badge {
+        font-weight: 500;
+        padding: 5px 10px;
+    }
+</style>
+{% endblock %}

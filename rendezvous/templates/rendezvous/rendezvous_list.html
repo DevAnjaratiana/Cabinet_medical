@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">
+                <i class="bi bi-calendar-week"></i> Gestion des Rendez-vous
+            </h3>
+            <a href="{% url 'rendezvous:ajouter' %}" class="btn btn-light">
+                <i class="bi bi-plus-circle"></i> Nouveau Rendez-vous
+            </a>
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="bg">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Médecin</th>
+                            <th>Date</th>
+                            <th>Heure</th>
+                            <th>Motif</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rdv in rdvs %}
+                        <tr>
+                            <td>
+                                <strong>{{ rdv.patient.nom }} {{ rdv.patient.prenom }}</strong><br>
+                                <small class="text-muted">ID: #{{ rdv.patient.id }}</small>
+                            </td>
+                            <td>
+                                <strong>Dr {{ rdv.medecin.nom }} {{ rdv.medecin.prenom }}</strong><br>
+                                <small class="text-muted">{{ rdv.medecin.specialite }}</small>
+                            </td>
+                            <td>{{ rdv.date_rendez_vous|date:"d/m/Y" }}</td>
+                            <td>{{ rdv.heure_rendez_vous|time:"H:i" }}</td>
+                            <td>{{ rdv.motif|default:"-"|truncatewords:10 }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'rendezvous:modifier' rdv.id %}" 
+                                       class="btn btn-sm btn-warning" 
+                                       title="Modifier">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'rendezvous:supprimer' rdv.id %}" 
+                                       class="btn btn-sm btn-danger" 
+                                       title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-info-circle"></i> Aucun rendez-vous trouvé
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
