@@ -2,11 +2,12 @@
 
 Application web complète pour la gestion d'un cabinet médical (patients, médecins, rendez-vous, consultations).
 
+---
+
 ## ✨ Fonctionnalités
 
 ### 👥 Patients
 - Ajouter, modifier, supprimer, consulter un patient
-
 
 ### 👨‍⚕️ Médecins
 - Gestion des médecins (spécialité, coordonnées)
